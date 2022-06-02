@@ -1,0 +1,11 @@
+# helm/Chart.yaml
+apiVersion: "v2"
+name: "airflow-v2"
+description: "Helm chart for airflow-v2"
+type: application
+version: "1.0.0"
+appVersion: "8.6.0"
+dependencies:
+  - name: airflow
+    version: 8.6.0
+    repository: "https://airflow-helm.github.io/charts"
