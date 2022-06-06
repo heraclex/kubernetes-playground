@@ -43,16 +43,13 @@ securityContext: {}
 airflowHome: /opt/airflow
 
 # Default airflow repository -- overrides all the specific images below
-# defaultAirflowRepository: apache/airflow
-defaultAirflowRepository: airflow-custom
+defaultAirflowRepository: local/airflowv2
 
 # Default airflow tag to deploy
-# defaultAirflowTag: "2.3.0"
-defaultAirflowTag: "1.0.0"
+defaultAirflowTag: "1.0.1"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
-# airflowVersion: "2.3.0"
-airflowVersion: "2.3.1-python3.8"
+airflowVersion: "2.3.0"
 
 # Images
 images:
@@ -311,9 +308,7 @@ extraEnv: ~
 
 # Extra envFrom 'items' that will be added to the definition of airflow containers
 # A string is expected (can be templated).
-extraEnvFrom: |
-  - configMapRef:
-      name: 'airflow-variables'
+extraEnvFrom: ~
 # eg:
 # extraEnvFrom: |
 #   - secretRef:
@@ -1569,7 +1564,7 @@ dags:
     ## optional subpath for dag volume mount
     subPath: ~
   gitSync:
-    enabled: false
+    enabled: true
 
     # git repo clone url
     # ssh examples ssh://git@github.com/apache/airflow.git
