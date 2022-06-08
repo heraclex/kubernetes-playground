@@ -1,6 +1,13 @@
 # Airflow on Kubernetes
 This is a side project to test airflow v2 on kubernetes
 
+Prerequisite:
+- kubernetest (kinD or minikube)
+- kubectl
+- k9s (optional)
+- helm
+
+Deployment steps:
 - Step1: Create Kubernetes Cluster (KinD): `kind create cluster --name airflow-cluster --config kind-cluster.yaml`
 - Step2: Create airflow namespace: `kubectl create namespace airflow`
 - Step3: Build custom docker image: 
@@ -27,4 +34,6 @@ helm install airflow apache-airflow/airflow --namespace airflow --debug
 helm upgrade --install airflow apache-airflow/airflow -n airflow -f override-values.yaml --debug
 ```
 
-Ref: [marclamberti.com](https://marclamberti.com/blog/airflow-on-kubernetes-get-started-in-10-mins/#:~:text=To%20deploy%20Airflow%20on%20Kuberntes,is%20to%20create%20a%20namespace.&text=In%20the%20order%20of%20the,current%20version%20with%20search%20repo.)
+Ref: 
+- https://marclamberti.com/blog/airflow-on-kubernetes-get-started-in-10-mins/#:~:text=To%20deploy%20Airflow%20on%20Kuberntes,is%20to%20create%20a%20namespace.&text=In%20the%20order%20of%20the,current%20version%20with%20search%20repo
+- https://airflow.apache.org/docs/helm-chart/stable/manage-dags-files.html
