@@ -33,16 +33,19 @@ dags:
     subPath: ~
   gitSync:
     enabled: true
-    repo: ssh://git@github.com:heraclex/airflow-dags.git
+    repo: git@github.com:heraclex/airflow-dags.git
     branch: main
     # the number of consecutive failures allowed before aborting
     maxFailures: 0
     # subpath within the repo where dags are located
     # should be "" if dags are at repo root
     subPath: "dags"
+    credentialsSecret: git-credentials
     sshKeySecret: airflow-ssh-git-secret
     knownHosts: |
       github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+
+
 
 extraSecrets:
   airflow-ssh-git-secret:
