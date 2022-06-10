@@ -2,7 +2,7 @@
 This is a side project to test airflow v2 on kubernetes
 
 Prerequisite:
-- kubernetest (kinD or minikube)
+- kubernetest (kinD or minikube) [brew install kind] || [brew install minikube]
 - kubectl
 - k9s (optional)
 - helm
