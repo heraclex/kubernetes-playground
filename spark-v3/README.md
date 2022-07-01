@@ -44,6 +44,7 @@ kubectl create rolebinding spark-executor-rb --clusterrole=edit --serviceaccount
 kubectl get serviceaccounts
 kubectl describe serviceaccounts spark-driver
 
+kubectl config use-context <insert-cluster-name-here>
 kubectl config set-context --current --namespace=<insert-namespace-name-here>
 ```
 
