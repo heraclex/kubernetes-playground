@@ -13,7 +13,7 @@ Deployment steps:
 - Step3: Build custom docker image: 
   ```bash
   # build airflow docker image
-  docker build -t airflow-custom:1.0.0 .
+  docker build -t local/airflowv2:1.0.2 .
   # load airflow docker image to airflow-cluster
   kind load docker-image {name}:{tag} --name airflow-cluster 
   ```
@@ -41,6 +41,10 @@ Deployment steps:
   kubectl apply -f secret.yaml
   # update configMap
   kubectl apply -f configMap.yaml
+  ```
+- Step6: Config external log on s3
+  ```
+  {"aws_access_key_id": "airflow", "aws_secret_access_key": "airflow123", "host": "host.docker.internal:9001"}
   ```
 
 Ref: 
