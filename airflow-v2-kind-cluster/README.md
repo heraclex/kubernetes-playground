@@ -89,7 +89,7 @@ You can use an [official airflow docker image](https://hub.docker.com/r/apache/a
   helm install airflow apache-airflow/airflow --namespace airflow --debug
   ```
 
-  In case we don't want to use all default settings from `value.yaml` provided by airflow-helm-chart, we can actually overwirte some of settings by creating a new file `overwrite-values.yaml`, and in which, you can add your own values. For example, you have created a custom airflow docker image on local (`local/airflowv2:1.0.0`)and you want to use that image for the deployment. Update these followint values:
+  In case we don't want to use all default settings from `value.yaml` provided by airflow-helm-chart, we can actually overwirte some of settings by creating a new file `overwrite-values.yaml`, and in which, you can add your own values. For example, you have created a custom airflow docker image on local (`local/airflowv2:1.0.0`)and you want to use that image for the deployment. All you need is just add these settings below to the `overwrite-values.yaml` file with following values:
   ```yaml
   # Default airflow repository -- overrides all the specific images below
   defaultAirflowRepository: local/airflowv2
