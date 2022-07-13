@@ -25,6 +25,15 @@ You can use an [official airflow docker image](https://hub.docker.com/r/apache/a
   docker image ls #OR 'docker images'
   ``` 
 
+  ```bash
+  # sameple output
+  tle@trv3529~ docker images
+  REPOSITORY                             TAG          IMAGE ID       CREATED        SIZE
+  local/airflowv2                        1.0.3        5e5b1e0368b1   5 hours ago    2.4GB
+  local/airflowv2                        1.0.2        97a83f004a3f   47 hours ago   2.4GB
+  local/minio                            latest       f7a94b78f912   47 hours ago   1.15GB
+  ```
+
 ## Deployment steps:
 
 - **Step 1: Create Kubernetes Airflow Cluster with  *kind* command:** `kind create cluster --name airflow-cluster --config kind-cluster.yaml`
