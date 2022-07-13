@@ -22,8 +22,7 @@ You can use an [official airflow docker image](https://hub.docker.com/r/apache/a
 
 - Verify the airflow image has been created:
   ```bash
-  docker image ls
-  # OR 'docker images'
+  docker image ls #OR 'docker images'
   ``` 
 
 ## Deployment steps:
