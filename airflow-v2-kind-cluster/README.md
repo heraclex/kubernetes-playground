@@ -115,7 +115,9 @@ You can use an [official airflow docker image](https://hub.docker.com/r/apache/a
   For more detail on overriding Helm chart values, please refer to this [link](https://all.docs.genesys.com/PrivateEdition/Current/PEGuide/HelmOverrides)
 
   
-- **Step6: Config external log on s3 (optional)**. Only config this setting if you have an object storage on your local (eg. minio, localstack, Azure Object Storage...)
+- **Step6: Config external log on s3 (optional)**. Basically, the task execution will persit log to the pod where it's running. And the log will be gone if the pod get terminated once it finishes. Therefore, we need to send the log to an external storage such as : S3, Big Query... In this setup, we will [write log to Amazon S3](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/logging/s3-task-handler.html) ([general architecture digram](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/logging-architecture.html)). 
+  
+  Only config this setting if you have an object storage on your local (eg. minio, localstack, Azure Object Storage...)
   ```
   {"aws_access_key_id": "minio", "aws_secret_access_key": "minio123", "host": "http://host.docker.internal:9000"}
   ```
