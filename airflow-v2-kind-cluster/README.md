@@ -1,6 +1,6 @@
 # Airflow on local Kubernetes 
 ## Overview 
-This is a side project to try out airflow v2 on kubernetes cluster which is running locally. So, What is airflow? *"Airflow is a platform that lets you build and run workflows. A workflow is represented as a DAG (a Directed Acyclic Graph), and contains individual pieces of work called Tasks, arranged with dependencies and data flows taken into account."* => [Architecture Overview](https://airflow.apache.org/docs/apache-airflow/stable/concepts/overview.html)
+This is a side project to try out airflow v2 on kubernetes cluster which is running locally. So, What is airflow? *"Airflow is a platform that lets you build and run workflows. A workflow is represented as a DAG (a Directed Acyclic Graph), and contains individual pieces of work called Tasks, arranged with dependencies and data flows taken into account."* => [Architecture Overview](https://airflow.apache.org/docs/apache-airflow/stable/concepts/overview.html) OR the [OLD Architecture Overview with celery] (https://medium.com/sicara/using-airflow-with-celery-workers-54cb5212d405)
 
 
 ## Prerequisite (on Macos)
