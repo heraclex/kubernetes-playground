@@ -1,9 +1,10 @@
-FROM apache/airflow:2.3.1-python3.8
+FROM apache/airflow:2.4.1
 COPY requirements.txt .
 USER root
 RUN apt-get update \
-    && apt-get install -y gcc iputils-ping telnet \
+    && apt-get upgrade -y \
+    && apt-get install -y build-essential manpages-dev python3-dev libsasl2-dev iputils-ping telnet \
     && rm -rf /var/lib/apt/lists/*
 USER airflow
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
