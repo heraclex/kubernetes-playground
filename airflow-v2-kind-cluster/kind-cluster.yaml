@@ -2,6 +2,11 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
+  extraMounts:
+    - hostPath: ./data
+      containerPath: /tmp/data
+    - hostPath: /Users/tle/.config/gcloud
+      containerPath: /home/airflow/.config/gcloud
 - role: worker
   kubeadmConfigPatches:
   - |
@@ -12,6 +17,27 @@ nodes:
   extraMounts:
     - hostPath: ./data
       containerPath: /tmp/data
+    - hostPath: /Users/tle/.config/gcloud
+      containerPath: /home/airflow/.config/gcloud
+      # optional: if set, the mount is read-only.
+      # default false
+      readOnly: true
+      # optional: if set, the mount needs SELinux relabeling.
+      # default false
+      selinuxRelabel: false
+      # optional: set propagation mode (None, HostToContainer or Bidirectional)
+      # see https://kubernetes.io/docs/concepts/storage/volumes/#mount-propagation
+      # default None
+      #
+      # WARNING: You very likely do not need this field.
+      #
+      # This field controls propagation of *additional* mounts created
+      # *at runtime* underneath this mount.
+      #
+      # On MacOS with Docker Desktop, if the mount is from macOS and not the
+      # docker desktop VM, you cannot use this field. You can use it for
+      # mounts to the linux VM.
+      propagation: HostToContainer
 - role: worker
   kubeadmConfigPatches:
   - |
@@ -21,14 +47,18 @@ nodes:
         node-labels: "node=worker_2"
   extraMounts:
     - hostPath: ./data
-      containerPath: /tmp/data 
-# - role: worker
-#   kubeadmConfigPatches:
-#   - |
-#     kind: JoinConfiguration
-#     nodeRegistration:
-#       kubeletExtraArgs:
-#         node-labels: "node=worker_3"
-#   extraMounts:
-#     - hostPath: ./data
-#       containerPath: /tmp/data
+      containerPath: /tmp/data
+    - hostPath: /Users/tle/.config/gcloud
+      containerPath: /home/airflow/.config/gcloud
+- role: worker
+  kubeadmConfigPatches:
+  - |
+    kind: JoinConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "node=worker_3"
+  extraMounts:
+    - hostPath: ./data
+      containerPath: /tmp/data
+    - hostPath: /Users/tle/.config/gcloud
+      containerPath: /home/airflow/.config/gcloud
