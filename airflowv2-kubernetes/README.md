@@ -122,6 +122,15 @@ You can use an [official airflow docker image](https://hub.docker.com/r/apache/a
   {"aws_access_key_id": "minio", "aws_secret_access_key": "minio123", "host": "http://host.docker.internal:9000"}
   ```
 
+## Comands to debug
+```bash
+# get all pods in namespace: kubectl get pods -n {namespace}
+kubectl get pods --namespace airflow
+
+# ssh to container on pod: kubectl exec -n {namespace} -it {pod} -c {container} -- /bin/bash
+kubectl exec -n airflow -it airflow-scheduler-6969ddc658-kdb42 -c scheduler -- /bin/bash
+```
+
 
 ## References: 
 - [Airflow on Kubernetes : Get started in 10 mins](https://marclamberti.com/blog/airflow-on-kubernetes-get-started-in-10-mins/#:~:text=To%20deploy%20Airflow%20on%20Kuberntes,is%20to%20create%20a%20namespace.&text=In%20the%20order%20of%20the,current%20version%20with%20search%20repo)

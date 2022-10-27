@@ -59,10 +59,13 @@ print-info:
 	@echo "> You can open http://localhost:8080"
 	@echo "> Username and password both set to be 'admin'"
 
-configure:
-	@echo "> Configuring 'airflow' on kind kubernetes and command..."
-	bash ./configure-kind-cluster.sh $(AIRFLOW_VERSION)
-
 build-airflow-image:
 	@echo "> Configuring 'airflow' on kind kubernetes and command..."
 	docker build --no-cache -t ${AIRFLOW_IMAGE_VERSION} ./docker/.
+
+configure:
+	@echo "> Configuring 'airflow' on kind kubernetes and command..."
+	bash ./configure-kind-cluster.sh $(AIRFLOW_VERSION)
+	@echo "> Configuring 'airfflow-helmchart'..."
+	bash ./configure-value-helmchart.sh '${AIRFLOW_IMAGE_REPO}\/${AIRFLOW_IMAGE_NAME}' ${AIRFLOW_IMAGE_TAG} ${AIRFLOW_VERSION}
+	

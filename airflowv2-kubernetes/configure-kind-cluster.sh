@@ -14,7 +14,8 @@ main() {
 
   echo "> Verifying gcp config on local..."
   local gcloud_path airflow_gcloud_path
-    gcloud_path=$(gcloud info --format=json | grep global_config_dir | cut -d ':' -f 2 | tr -d '," ' | sed 's/\//\\&/g')   airflow_gcloud_path=$(echo /home/airflow/.config/gcloud | sed 's/\//\\&/g')
+    gcloud_path=$(gcloud info --format=json | grep global_config_dir | cut -d ':' -f 2 | tr -d '," ' | sed 's/\//\\&/g')   
+    airflow_gcloud_path=$(echo /home/airflow/.config/gcloud | sed 's/\//\\&/g')
     airflow_con="google-cloud-platform:\/\/?extra__google_cloud_platform__scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform"
 
   if [[ -z $gcloud_path ]]; then

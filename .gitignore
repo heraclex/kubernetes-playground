@@ -1,3 +1,4 @@
 kind-cluster.yaml
+override-values.yaml
 airflow.sh
 *.bak

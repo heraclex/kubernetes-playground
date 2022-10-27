@@ -4,40 +4,32 @@ set -o errexit
 set -o pipefail
 
 # Default airflow repository -- overrides all the specific images below
-defaultAirflowRepository='local/airflowv2'
+DEFAULT_AIRFLOW_REPOSITORY='local\/airflowv2'
 
 # Default airflow tag to deploy
-defaultAirflowTag: "1.0.0"
+DEFAULT_AIRFLOW_TAG="1.0.0"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
-airflowVersion: "2.3.0"
+AIRFLOW_VERSION="2.3.0"
 
-function config_override_value() {
-  ### download and configure docker-compose and the airflow command script
+config_override_value() {
+  ### get information ready to replace template
+  # local default_airflow_repository default_airflow_tag airflow_version
   local default_airflow_repository=$1
-  local default_airflow_tag=$2
-  local airflow_version=$3
+    default_airflow_tag=$2
+    airflow_version=$3
   echo "> You are about init and run airflow version:$airflow_version on kubernetes with kind"
   ###
 
-  echo "> Verifying gcp config on local..."
-  local gcloud_path airflow_gcloud_path
-    gcloud_path=$(gcloud info --format=json | grep global_config_dir | cut -d ':' -f 2 | tr -d '," ' | sed 's/\//\\&/g')   airflow_gcloud_path=$(echo /home/airflow/.config/gcloud | sed 's/\//\\&/g')
-    airflow_con="google-cloud-platform:\/\/?extra__google_cloud_platform__scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform"
-
-  if [[ -z $gcloud_path ]]; then
-    echo "> Error reading gcloud config"
-    exit 1
-  fi
 
   echo "> Configuring kind-cluster.yaml file..."
 
   # creating kind-cluster.config file
-  cp kind-cluster.temp.yaml kind-cluster.yaml
-
-  # Add volume mount for gcloud
-  sed -i.bak -E "/^  extraMounts:/s//  extraMounts:\n    - hostPath: $gcloud_path\n      containerPath: $airflow_gcloud_path/" kind-cluster.yaml  
+  cp ./chart/override-values.temp.yaml ./chart/override-values.yaml
+  sed -i.bak -E "/defaultAirflowRepository:/s//defaultAirflowRepository: $default_airflow_repository/" ./chart/override-values.yaml 
+  sed -i.bak -E "/defaultAirflowTag:/s//defaultAirflowTag: $default_airflow_tag/" ./chart/override-values.yaml 
+  sed -i.bak -E "/airflowVersion:/s//airflowVersion: $airflow_version/" ./chart/override-values.yaml 
 }
 
 # Run the main funtion
-main "${1:-$defaultAirflowRepository}"
+config_override_value "${1:-$DEFAULT_AIRFLOW_REPOSITORY}" "${2:-$DEFAULT_AIRFLOW_TAG}" "${3:-$AIRFLOW_VERSION}"
