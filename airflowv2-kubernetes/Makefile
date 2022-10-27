@@ -29,8 +29,9 @@ AIRFLOW_VERSION=2.4.1
 clean: 
 	@echo "> Stop airflow on kubernetes (kind)..."
 	kind delete cluster --name airflow-cluster
-check: @echo "> Check is not implemented yet"
-install: configure init-kubernetes loading-airflow-image config-airflow-cluster start-airflow-cluster check print-info
+check: 
+	@echo "> Check is not implemented yet"
+install: configure init-kubernetes loading-airflow-image config-airflow-cluster start-airflow-cluster print-info
 help:
 	@echo "Commands:"
 	@echo "  install    - setup and run the airflow stack on kubernetes"
@@ -52,8 +53,10 @@ config-airflow-cluster:
 	kubectl apply -f ./chart/configMap.yaml
 
 start-airflow-cluster:
-	@echo "> Starting 'airflow' cluster..."
+	@echo "> Starting 'airflow' cluster...''
 	helm upgrade --install airflow apache-airflow/airflow -n airflow -f ./chart/override-values.yaml --debug
+	@echo "> Mounting 'svc/airflow-webserver' to port 8080
+	kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
 
 print-info:
 	@echo "> You can open http://localhost:8080"

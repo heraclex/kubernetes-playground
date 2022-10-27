@@ -9,10 +9,10 @@ AIRFLOW_DEFAULT_VERSION="2.4.xx"
 main() {
   ### download and configure docker-compose and the airflow command script
   local airflow_version=$1
-  echo "> You are about init and run airflow version:$airflow_version on kubernetes with kind"
+  echo "You are going to init and run airflow version:$airflow_version on kubernetes with kind"
   ###
 
-  echo "> Verifying gcp config on local..."
+  echo "Verifying google-cloud-cli config on local..."
   local gcloud_path airflow_gcloud_path
     gcloud_path=$(gcloud info --format=json | grep global_config_dir | cut -d ':' -f 2 | tr -d '," ' | sed 's/\//\\&/g')   
     airflow_gcloud_path=$(echo /home/airflow/.config/gcloud | sed 's/\//\\&/g')
@@ -23,7 +23,7 @@ main() {
     exit 1
   fi
 
-  echo "> Configuring kind-cluster.yaml file..."
+  echo "Configuring kind-cluster.yaml file..."
 
   # creating kind-cluster.config file
   cp kind-cluster.temp.yaml kind-cluster.yaml

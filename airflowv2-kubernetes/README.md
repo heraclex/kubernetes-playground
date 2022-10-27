@@ -122,13 +122,16 @@ You can use an [official airflow docker image](https://hub.docker.com/r/apache/a
   {"aws_access_key_id": "minio", "aws_secret_access_key": "minio123", "host": "http://host.docker.internal:9000"}
   ```
 
-## Comands to debug
+## Trouble shooting and debug
 ```bash
 # get all pods in namespace: kubectl get pods -n {namespace}
 kubectl get pods --namespace airflow
 
 # ssh to container on pod: kubectl exec -n {namespace} -it {pod} -c {container} -- /bin/bash
 kubectl exec -n airflow -it airflow-scheduler-6969ddc658-kdb42 -c scheduler -- /bin/bash
+
+# Prune all docker volumes in case you running out of space when copy docker iamge to kubernetes
+docker system prune --all --force --volumes
 ```
 
 

@@ -18,17 +18,20 @@ config_override_value() {
   local default_airflow_repository=$1
     default_airflow_tag=$2
     airflow_version=$3
-  echo "> You are about init and run airflow version:$airflow_version on kubernetes with kind"
+  echo "You are going to custom override-values.yaml file for airflow helm chart deployment"
   ###
 
 
-  echo "> Configuring kind-cluster.yaml file..."
+  echo "Configuring ./chart/override-values.yaml file..."
 
   # creating kind-cluster.config file
   cp ./chart/override-values.temp.yaml ./chart/override-values.yaml
   sed -i.bak -E "/defaultAirflowRepository:/s//defaultAirflowRepository: $default_airflow_repository/" ./chart/override-values.yaml 
+  echo "...defaultAirflowRepository: $default_airflow_repository"
   sed -i.bak -E "/defaultAirflowTag:/s//defaultAirflowTag: $default_airflow_tag/" ./chart/override-values.yaml 
+  echo "...defaultAirflowTag: $default_airflow_tag"
   sed -i.bak -E "/airflowVersion:/s//airflowVersion: $airflow_version/" ./chart/override-values.yaml 
+  echo "...airflowVersion: $airflow_version"
 }
 
 # Run the main funtion
