@@ -10,8 +10,10 @@ nodes:
       kubeletExtraArgs:
         node-labels: "node=worker_1"
   extraMounts:
-    - hostPath: ./data
-      containerPath: /tmp/data
+    - hostPath: ./data/logs
+      containerPath: /tmp/logs
+    - hostPath: ./data/dags
+      containerPath: /tmp/dags
 - role: worker
   kubeadmConfigPatches:
   - |
@@ -20,8 +22,10 @@ nodes:
       kubeletExtraArgs:
         node-labels: "node=worker_2"
   extraMounts:
-    - hostPath: ./data
-      containerPath: /tmp/data
+    - hostPath: ./data/logs
+      containerPath: /tmp/logs
+    - hostPath: ./data/dags
+      containerPath: /tmp/dags
 - role: worker
   kubeadmConfigPatches:
   - |
@@ -30,5 +34,7 @@ nodes:
       kubeletExtraArgs:
         node-labels: "node=worker_3"
   extraMounts:
-    - hostPath: ./data
-      containerPath: /tmp/data
+    - hostPath: ./data/logs
+      containerPath: /tmp/logs
+    - hostPath: ./data/dags
+      containerPath: /tmp/dags

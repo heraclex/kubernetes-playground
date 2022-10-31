@@ -27,36 +27,6 @@ workers:
     mountPropagation: HostToContainer
 
 
-# Git sync
-dags:
-  persistence:
-    # Enable persistent volume for storing dags
-    enabled: true
-    # Volume size for dags
-    size: 1Gi
-    # If using a custom storageClass, pass name here
-    storageClassName:
-    # access mode of the persistent volume
-    accessMode: ReadWriteOnce
-    ## the name of an existing PVC to use
-    existingClaim:
-    ## optional subpath for dag volume mount
-    subPath: ~
-  gitSync:
-    enabled: true
-    repo: git@github.com:heraclex/airflow-dags.git
-    branch: main
-    # the number of consecutive failures allowed before aborting
-    maxFailures: 0
-    # subpath within the repo where dags are located
-    # should be "" if dags are at repo root
-    subPath: "dags"
-    credentialsSecret: git-credentials
-    sshKeySecret: airflow-ssh-git-secret
-    knownHosts: |
-      github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
-
-
 # secret:
 #   - envName: "AIRFLOW_CONN_GCP"
 #     secretName: "my-airflow-connections"
@@ -71,21 +41,54 @@ extraSecrets:
       gitSshKey: 'LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFBQUFBQkc1dmJtVUFBQUFFYm05dVpRQUFBQUFBQUFBQkFBQUNGd0FBQUFkemMyZ3RjbgpOaEFBQUFBd0VBQVFBQUFnRUF4dzkvajgyZTUvdnRQaW9zRkU1ZDRRY3NsdkhEdWdGVlZOL3dOYWxPQmozeURESzQ4NHpLCkpmU3piajFscnVpaEdvQTNsRFNZMjFsZ1lTSkxUNytXYVdYTzRtcVB0Sk8yVGxWWmV6aVQyN2kxYVhwQ1NtTGZoSXRFWmkKQkc4ekkvRmhvUmJ2ZWkvNlByV2JhY1JiWitidmIvYmI1WiszekFwcG95cWVYVmFLbnpPZk1Kb1QydTM0ZHVxY3Z2dWI0NwpLd0hIWUUrVXhpQUFSZFpseSt5Wm1WWlNkdlg1amhCNkc3V2FHWDJDajlUbnNNRGNQdzdoY1h2dG94Ynh2eGtVWkkwM3hLCmxiekhKc05kclFSS3pVNjgweTNmVGF5RFc2eHFTcnVxeWs5YStFZXgwY3hWYStiWFZkdW5YZ2tEUWV6NWNUYVYrcnAwVnAKVFRrcFNUMXptSG16U055WENTU1RpVHZrcXZTMHRndS9rV3VPVDg0a1lUd2oyY0o1RjI4ODdtWEpVbnVsRGY2ZlMzR2lncQpzaGpJWmlVQytoYzhrS1VtSUZEbHZsR1ZvNVNDVjI0TUdpQmVoekRTZU1LWG5DbWcxQUd2dyt3VUFQT0ZMdUE0RHZuL21lCk5ZUTlmZytoT2E2elRCZHZJM2NqTWw4ZTZkM2dTYTROdlAyaHprOTNOWjIzNUFtc2RaaXM3WnEzcUxyV3lhck5uMUVzNlQKZEJEd09NVGxldUJDUDZpSjIwa1VIQ21PK1NYV1JzYXJpNXBkQUpxaTh3dlZrVW1ERjlRSkNkQUhyOTFTWXRjbjVLT1JlZApSUGx6RHE2SGhBWjNwbGhnTklQakk5bm1RdjI3RkVjV0JtdlBSdkhuQUVDeEI0bDJzRVpiazg0d1hHS25US2EwZXlaUHVmCnNBQUFkUVBZc2w1ejJMSmVjQUFBQUhjM05vTFhKellRQUFBZ0VBeHc5L2o4MmU1L3Z0UGlvc0ZFNWQ0UWNzbHZIRHVnRlYKVk4vd05hbE9CajN5RERLNDg0ektKZlN6YmoxbHJ1aWhHb0EzbERTWTIxbGdZU0pMVDcrV2FXWE80bXFQdEpPMlRsVlplegppVDI3aTFhWHBDU21MZmhJdEVaaUJHOHpJL0Zob1JidmVpLzZQcldiYWNSYlorYnZiL2JiNVorM3pBcHBveXFlWFZhS256Ck9mTUpvVDJ1MzRkdXFjdnZ1YjQ3S3dISFlFK1V4aUFBUmRabHkreVptVlpTZHZYNWpoQjZHN1dhR1gyQ2o5VG5zTURjUHcKN2hjWHZ0b3hieHZ4a1VaSTAzeEtsYnpISnNOZHJRUkt6VTY4MHkzZlRheURXNnhxU3J1cXlrOWErRWV4MGN4VmErYlhWZAp1blhna0RRZXo1Y1RhVitycDBWcFRUa3BTVDF6bUhtelNOeVhDU1NUaVR2a3F2UzB0Z3Uva1d1T1Q4NGtZVHdqMmNKNUYyCjg4N21YSlVudWxEZjZmUzNHaWdxc2hqSVppVUMraGM4a0tVbUlGRGx2bEdWbzVTQ1YyNE1HaUJlaHpEU2VNS1huQ21nMUEKR3Z3K3dVQVBPRkx1QTREdm4vbWVOWVE5ZmcraE9hNnpUQmR2STNjak1sOGU2ZDNnU2E0TnZQMmh6azkzTloyMzVBbXNkWgppczdacTNxTHJXeWFyTm4xRXM2VGRCRHdPTVRsZXVCQ1A2aUoyMGtVSENtTytTWFdSc2FyaTVwZEFKcWk4d3ZWa1VtREY5ClFKQ2RBSHI5MVNZdGNuNUtPUmVkUlBsekRxNkhoQVozcGxoZ05JUGpJOW5tUXYyN0ZFY1dCbXZQUnZIbkFFQ3hCNGwyc0UKWmJrODR3WEdLblRLYTBleVpQdWZzQUFBQURBUUFCQUFBQ0FEVmdOWDgwem9nNzZDaUVIRit4aDhEQU1MZWt5aXZGRWNGNQpicXFrNURRT1JpbjVLOWk2aHJYWXdJZ3QxR2NySDQvQWs2YWMxK1B4T2tPeGMycEY0Q29RejRHc3V5M2JjY1hkWXVvRWlMCmtnOVJ2OFdXd2l5UFo4ZFhIQTgrVmdNc1JWWnhsUE01akN0bWZPN0daUkFlUDFQUmFMTlF1WEx2MDlXWnB1ODJObU5yN3kKS1VIZ0RWVUl0cWEyOVdmajEyKzN3V05VMDNxd3VBSUI5RGZURUhpcVNlQjJJbDF5azV0OGZYNmFSZmtWU0s3L2Q4ODh5VAp5cDAxV280RmV5Zk9KZGIzZS9SY3N6WDBxdGlxenZmd1JmZUdWRnM2aDlwOEIrQlVJLzZ0ZXFJYWIxYm5LSHlQWUd3NFFzCitYTVJWcldwTjk1SWRmbWJSaG9iMnJNMTFCbXozM2xrampCUHovZGNlOEgyM2lhczZUR0FTaUw3S1J5UWJzcWhBOE9KL0sKWHFRMGM3UlNIQWNFM21WejBFc2xpZDQ4QlFPRnBSaDh2b2p3N1I4VnU1eWFhL3REZnNvaTRKTnB6Y0J0S0xHNnlQdy9QWAp3eGs0QU5GMzMxQU5jL2VZSDY4Qi9EYXZlZHcrcGhzWVZ0OW9xdVVpOTFFRmU5Zkt5Q1hGaVo3RHZDZnQxOGpoYkIxWFZOCmtzZXlXai9oQVZqdDRTTm1rRXR0UTNSdGJYclRCRkxTOXVqbzdTSmo5c1o5SklNT0pVdnVHWmRBamx6ZGVVcE5JcHNVNkwKVlpjTXpUUkF0RHhzQUpOWGFJK2IwYzNmOXhGK0dGVCt6aE10T0tHTnA0WFpTWE5IK1hibmIzUXB4Mks4Zm1lWXZzZmRONQpuWXo1cWRQc0d5WEcrSlNuWlpBQUFCQVFDaDVQeGFOZmNielNMMlFISEdhZFJ6UWZXUUh3N25OL0VYTVNIY1BpbkhrbUw2CmpYRzU1NmgrYThrYTF5aElINVF5bS9SRFBkN0l1aVRta1htWXFKb1ltWjVpM250M2Z2ZnVES0lGRFllTnJVYWQ3M0x5L3QKejUrOWl0Y0h2ODZvUk1oZ003cjNGUzRPVjY3K0tRT1pDZGRlZ1VEUDA4TzNSaXpIeTFMMndvSExpbDhPdmhFaDd3N3ZyKwpKRC9TSUVzMFpBeUVkT3h4S2dOLzhDSXU5TERVaUs5SEtNMzg4K2xDRXpxMVZUU3UxeWw2b0pQaFF0ZFpQNHJWbHNKNFdKCkwwUUFiSklvL3ZqMGJVRzd5VjZFUjloczZ5ZE1XbXpyaVRENG5FWHArZEt6Wnd2OUswell0WTJ6L05iSmxuVlM4Rk11eHMKMGV4TjZ0UTAycnZsaXFuYkFBQUJBUUQ0cUUveGg2VHkyNE1Rd2orV1hqaHBNRlFBS01qM0xhMlFsbDlBYXBvdVJFVTJOQQpvUUNZeVRUYzFpdEpiMk9RTkxVaEZBaUdVR2tNUVpTRzhtOXh6Qm9uZ0FKS0tyRjYrVlhROTVpcitWcC9VODVabmE4WU9wCnU4eXg1dDd1RWJDWkxsN0FzaGNQdWR2U3ovNkNzWWQ2M0Vpcy83Tjc3bzJ0MGVsbXhtNmVJcWpTdW5vTmR3UXpreEp3NTYKQWhwUENYSks5Qm9SeDFDb2I5SXVBajRKZk41d1hIR0E1ZC9zQmg5aVdKVmdKalFuZmNxVzNKZGswMjZFUy9SSnFzcTlaVwo2cHdzT3BMblducllaaE9IUTE3dzd2UWg5NkNmRHpGNHZiT0NJYWtmdFZ1TnFlMUVuNnJzSUdib1lHU1ZoUnY3UWlKd0xqCnJrRWo0YUJjTzZmZXpGQUFBQkFRRE04RVFEeWF2Ny9SM2RIMFFvVGQrUEVkbE5jMUdJSXMxMk52bGFTNXVTc2FpcHFKUDUKdlgzdDM4a3BGMVR1VE5ocStMcithZHQvVFE4d2Z4aTNmNDJTbkY3Q2FBYmRHUmVJRnJRbGpiVTFKRCt4UG1pcEM1em5JZwpkWlNOKzNFVkNsQko0enJ5dk04OFNWYXhmZ3F5UVpZUWtxRFZMSE5RRWxLZmtQOEZVY2ZnQVJabmRwNTRYeGo1MW4xbkVQCjVjSmJScU85Sk1JbXh0c0g1WjZINHlpOGZ1emFHNWhsWTJuTW1Rd0ZaNUplQ3ZxNXRSTGQ3bFptVU1OS1VDK21GYy9GYU8KamEweVNVU1FKMzIweVlTaVZrdjJ3Y2xyUC9IQm9WNHJGRWN6QlhSQXlHMVB6NisyZUFrd2s2T3Z6S1ZTQnpRWXdNcDdlRQpFYVE3WkdoWjR2ZS9BQUFBRm1GcGNtWnNiM2RmWjJsMFgzTjVibU5BYkc5allXd0JBZ01FCi0tLS0tRU5EIE9QRU5TU0ggUFJJVkFURSBLRVktLS0tLQo='
 
 
-# logs:
-#   persistence:
-#     # Enable persistent volume for storing logs
-#     enabled: true
-#     # Volume size for logs
-#     size: 100Gi
-#     # If using a custom storageClass, pass name here
-#     storageClassName:
-#     ## the name of an existing PVC to use
-#     existingClaim: airflow-logs
+# Git sync
+dags:
+  persistence:
+    # Enable persistent volume for storing dags
+    enabled: true
+    # Volume size for dags
+    size: 1Gi
+    # If using a custom storageClass, pass name here
+    storageClassName:
+    # access mode of the persistent volume
+    accessMode: ReadWriteOnce
+    ## the name of an existing PVC to use
+    existingClaim: airflow-dags
+    ## optional subpath for dag volume mount
+    # subPath: "dags"
+  gitSync:
+    # change to true if you want to config for remote Git Sync
+    enabled: false
+    repo: git@github.com:heraclex/airflow-dags.git
+    branch: main
+    # the number of consecutive failures allowed before aborting
+    maxFailures: 0
+    # subpath within the repo where dags are located
+    # should be "" if dags are at repo root
+    subPath: "dags"
+    credentialsSecret: git-credentials
+    sshKeySecret: airflow-ssh-git-secret
+    knownHosts: |
+      github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
 
 
-config:
-  logging:
-    remote_logging: 'True'
-    remote_base_log_folder: 's3://airflow/dag-logs'
-    remote_log_conn_id: MyS3Conn
-    colored_console_log: 'False'
+###===Airflow Log configuration===###
+# local persistent
+logs:
+  persistence:
+    # Enable persistent volume for storing logs
+    enabled: true
+    # Volume size for logs
+    # size: 100Gi
+    # If using a custom storageClass, pass name here
+    # storageClassName:
+    ## the name of an existing PVC to use
+    existingClaim: airflow-logs
+# external storage persistent
+# config:
+#   logging:
+#     remote_logging: 'False'
+#     remote_base_log_folder: 's3://airflow/dag-logs'
+#     remote_log_conn_id: MyS3Conn
+#     colored_console_log: 'False'
+#     base_log_folder: '{AIRFLOW_HOME}/logs'

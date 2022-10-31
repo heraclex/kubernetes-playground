@@ -51,6 +51,8 @@ config-airflow-cluster:
 	kubectl create namespace airflow
 	kubectl apply -f ./chart/secret.yaml
 	kubectl apply -f ./chart/configMap.yaml
+	kubectl apply -f ./chart/dags-volume.yaml
+	kubectl apply -f ./chart/logs-volume.yaml
 
 start-airflow-cluster:
 	@echo "> Starting 'airflow' cluster..."
