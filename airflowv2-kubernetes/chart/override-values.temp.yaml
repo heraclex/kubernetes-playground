@@ -15,8 +15,45 @@ extraEnvFrom: |
   - configMapRef:
       name: airflow-variables
  
+ # Airflow workers Config
 workers:
+  # Mount additional volumes into workers.
+  extraVolumes:
+  - name: gcp-config
+    hostPath:
+      path: /home/airflow/.config/gcloud
+  extraVolumeMounts:
+  - name: gcp-config
+    mountPath: /opt/airflow/.config/gcloud
+    mountPropagation: HostToContainer
+
+# Airflow scheduler Config
+scheduler:
   # Mount additional volumes into scheduler.
+  extraVolumes:
+  - name: gcp-config
+    hostPath:
+      path: /home/airflow/.config/gcloud
+  extraVolumeMounts:
+  - name: gcp-config
+    mountPath: /opt/airflow/.config/gcloud
+    mountPropagation: HostToContainer
+
+# Airflow webserver Config
+webserver:
+  # Mount additional volumes into webserver.
+  extraVolumes:
+  - name: gcp-config
+    hostPath:
+      path: /home/airflow/.config/gcloud
+  extraVolumeMounts:
+  - name: gcp-config
+    mountPath: /opt/airflow/.config/gcloud
+    mountPropagation: HostToContainer
+
+# Airflow Triggerer Config
+triggerer:
+  # Mount additional volumes into webserver.
   extraVolumes:
   - name: gcp-config
     hostPath:
@@ -34,7 +71,7 @@ secret:
 extraSecrets:
   minio-s3-airflow-connections:
     stringData: |
-      AIRFLOW_CONN_MINIOS3: '{
+      AIRFLOW_CONN_S3MINIO: '{
           "connection_type": "aws_default", 
           "aws_access_key_id": "minio", 
           "aws_secret_access_key": "minio123", 

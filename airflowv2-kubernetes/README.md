@@ -153,8 +153,12 @@ kubectl get pods --namespace airflow
 # ssh to container on pod: kubectl exec -n {namespace} -it {pod} -c {container} -- /bin/bash
 kubectl exec -n airflow -it airflow-scheduler-6969ddc658-kdb42 -c scheduler -- /bin/bash
 
+# debug on airflow deploy
+kubectl describe pod podname
+
 # Prune all docker volumes in case you running out of space when copy docker iamge to kubernetes
 docker system prune --all --force --volumes
+
 ```
 
 

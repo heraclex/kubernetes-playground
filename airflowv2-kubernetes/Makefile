@@ -27,6 +27,8 @@ AIRFLOW_VERSION=2.4.1
 .DEFAULT_GOAL := help
 .PHONY: clean setup check configure help
 clean: 
+	@echo "> Delete namespace airflow..."
+	kubectl delete namespace airflow
 	@echo "> Stop airflow on kubernetes (kind)..."
 	kind delete cluster --name airflow-cluster
 check: 
@@ -49,10 +51,10 @@ loading-airflow-image:
 config-airflow-cluster:
 	@echo "> Configuring 'airflow' cluster..."
 	kubectl create namespace airflow
-	kubectl apply -f ./chart/secret.yaml
-	kubectl apply -f ./chart/configMap.yaml
-	kubectl apply -f ./chart/dags-volume.yaml
-	kubectl apply -f ./chart/logs-volume.yaml
+	kubectl apply -f ./chart/secret.yaml -n airflow
+	kubectl apply -f ./chart/configMap.yaml -n airflow
+	kubectl apply -f ./chart/dags-volume.yaml -n airflow
+	kubectl apply -f ./chart/logs-volume.yaml -n airflow
 
 start-airflow-cluster:
 	@echo "> Starting 'airflow' cluster..."
