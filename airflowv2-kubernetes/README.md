@@ -34,13 +34,36 @@ You can use an [official airflow docker image](https://hub.docker.com/r/apache/a
   local/minio                            latest       f7a94b78f912   47 hours ago   1.15GB
   ```
 
-## Deployment steps:
+## Deployment steps: 
+I try to keep it very simple
+
+### MACOS and Linux:
+
+Before start, please make sure the variables `AIRFLOW_IMAGE_NAME, AIRFLOW_IMAGE_TAG AIRFLOW_IMAGE_REPO, AIRFLOW_VERSION` in Makefile is compatible with those variables (`{repo}/{image-name}:{tag}`) are used when building docker image
+
+Run `make install` and after the installation is finished (it takes a moment),
+Airflow will already be running at:
+
+* URL: http://localhost:8080
+* User: `admin`
+* Pass: `admin`
+
+To stop it, run (from inside `airflowv2-kubernetes`):
+
+    make clean
+
+To bring it up again later, run:
+
+    make install
+
+### Windows: Not implemented yet
+
+## Details explains in Make file steps:
 
 - **Step 1: Create Kubernetes Airflow Cluster with  *kind* command:** `kind create cluster --name airflow-cluster --config kind-cluster.yaml`
 
 
 - **Step 2: Create airflow namespace:** `kubectl create namespace airflow`
-
 
 - **Step 3: load airflow image to airflow-cluster:**
   ```bash
@@ -48,7 +71,7 @@ You can use an [official airflow docker image](https://hub.docker.com/r/apache/a
   # Example, we will load the custom airflow image (tag 1.0.0) has been created on local repo with command: kind load docker-image local/airflowv2:1.0.0 --name airflow-cluster
   ```
 
-- **Step 4: Set up `ssh-git-secret` to sync dag repository with your local airflow cluster.** What does that mean? Basically, when we want to add/edit an airflow dag, we need to re-deploy the whole airflow cluster with updated dags. In order to avoid that bottleneck, we will setup and `Sync` between airflow dags repo and our airflow. Everytime we makes change on airflow dags, after commit to the `master` branch, airflow cluster will have an interval check on git-repo to see if any new changes have been made. Then it will pull the latest update for all dags and reload it again into its execution context. The diagram below will indicate how it works. You can also prefer to this [Manage DAGs files](https://airflow.apache.org/docs/helm-chart/stable/manage-dags-files.html) for more details. 
+- **Step 4 Optional: Set up `ssh-git-secret` to sync dag repository with your local airflow cluster.** What does that mean? Basically, when we want to add/edit an airflow dag, we need to re-deploy the whole airflow cluster with updated dags. In order to avoid that bottleneck, we will setup and `Sync` between airflow dags repo and our airflow. Everytime we makes change on airflow dags, after commit to the `master` branch, airflow cluster will have an interval check on git-repo to see if any new changes have been made. Then it will pull the latest update for all dags and reload it again into its execution context. The diagram below will indicate how it works. You can also prefer to this [Manage DAGs files](https://airflow.apache.org/docs/helm-chart/stable/manage-dags-files.html) for more details. 
 
   ```mermaid
   stateDiagram-v2
