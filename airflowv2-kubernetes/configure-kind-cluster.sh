@@ -4,7 +4,7 @@ set -o errexit
 set -o pipefail
 
 # global variables
-AIRFLOW_DEFAULT_VERSION="2.4.xx"
+AIRFLOW_DEFAULT_VERSION="2.4.0"
 
 main() {
   ### download and configure docker-compose and the airflow command script
