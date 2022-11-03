@@ -27,42 +27,6 @@ workers:
     mountPath: /opt/airflow/.config/gcloud
     mountPropagation: HostToContainer
 
-# Airflow scheduler Config
-scheduler:
-  # Mount additional volumes into scheduler.
-  extraVolumes:
-  - name: gcp-config
-    hostPath:
-      path: /home/airflow/.config/gcloud
-  extraVolumeMounts:
-  - name: gcp-config
-    mountPath: /opt/airflow/.config/gcloud
-    mountPropagation: HostToContainer
-
-# Airflow webserver Config
-webserver:
-  # Mount additional volumes into webserver.
-  extraVolumes:
-  - name: gcp-config
-    hostPath:
-      path: /home/airflow/.config/gcloud
-  extraVolumeMounts:
-  - name: gcp-config
-    mountPath: /opt/airflow/.config/gcloud
-    mountPropagation: HostToContainer
-
-# Airflow Triggerer Config
-triggerer:
-  # Mount additional volumes into webserver.
-  extraVolumes:
-  - name: gcp-config
-    hostPath:
-      path: /home/airflow/.config/gcloud
-  extraVolumeMounts:
-  - name: gcp-config
-    mountPath: /opt/airflow/.config/gcloud
-    mountPropagation: HostToContainer
-
 secret:
   - envName: "AIRFLOW_CONN_S3MINIO"
     secretName: "minio-s3-airflow-connections"

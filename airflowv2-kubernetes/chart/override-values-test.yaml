@@ -17,7 +17,7 @@ extraEnvFrom: |
 
  
 workers:
-  # Mount additional volumes into scheduler.
+  # Mount additional volumes into workers. This is for gcloud auth
   extraVolumes:
   - name: gcp-config
     hostPath:
