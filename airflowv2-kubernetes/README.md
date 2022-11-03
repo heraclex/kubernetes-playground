@@ -35,11 +35,11 @@ You can use an [official airflow docker image](https://hub.docker.com/r/apache/a
   ```
 
 ## Deployment steps: 
-I try to keep it very simple
+I try to keep it simple
 
 ### MACOS and Linux:
 
-Before start, please make sure the variables `AIRFLOW_IMAGE_NAME, AIRFLOW_IMAGE_TAG AIRFLOW_IMAGE_REPO, AIRFLOW_VERSION` in Makefile is compatible with those variables (`{repo}/{image-name}:{tag}`) are used when building docker image
+~~Before start, please make sure the variables `AIRFLOW_IMAGE_NAME, AIRFLOW_IMAGE_TAG AIRFLOW_IMAGE_REPO, AIRFLOW_VERSION` in Makefile is compatible with those variables (`{repo}/{image-name}:{tag}`) are used when building docker image~~
 
 Run `make install-all` and after the installation is finished (it takes a moment),
 Airflow will already be running at:

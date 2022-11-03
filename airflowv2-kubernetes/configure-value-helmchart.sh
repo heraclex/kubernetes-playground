@@ -23,7 +23,7 @@ config_override_value() {
   ###
 
 
-  echo "\nConfiguring ./chart/override-values.yaml file...\n"
+  echo "\nConfiguring ./chart/override-values.yaml file..."
 
   # creating override-values.yaml file
   cp ./chart/override-values.temp.yaml ./chart/override-values.yaml
