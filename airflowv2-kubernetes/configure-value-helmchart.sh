@@ -23,7 +23,7 @@ config_override_value() {
   ###
 
 
-  echo "Configuring ./chart/override-values.yaml file..."
+  echo "\nConfiguring ./chart/override-values.yaml file...\n"
 
   # creating override-values.yaml file
   cp ./chart/override-values.temp.yaml ./chart/override-values.yaml
@@ -37,7 +37,7 @@ config_override_value() {
   sed -i.bak -E "/^secret:/s//secret:\n  - envName: \"AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT\"\n    secretName: \"gcp-airflow-connections\"\n    secretKey: \"AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT\"/" ./chart/override-values.yaml 
   echo "...adding AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT to secret"
   sed -i.bak -E "/^extraSecrets:/s//extraSecrets:\n  gcp-airflow-connections:\n    stringData: |\n      AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT: '$airflow_con'/" ./chart/override-values.yaml 
-  echo "...adding AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT to extraSecrets"
+  echo "...adding AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT to extraSecrets \n"
 }
 
 # Run the main funtion

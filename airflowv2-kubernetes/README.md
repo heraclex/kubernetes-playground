@@ -41,7 +41,7 @@ I try to keep it very simple
 
 Before start, please make sure the variables `AIRFLOW_IMAGE_NAME, AIRFLOW_IMAGE_TAG AIRFLOW_IMAGE_REPO, AIRFLOW_VERSION` in Makefile is compatible with those variables (`{repo}/{image-name}:{tag}`) are used when building docker image
 
-Run `make install` and after the installation is finished (it takes a moment),
+Run `make install-all` and after the installation is finished (it takes a moment),
 Airflow will already be running at:
 
 * URL: http://localhost:8080
@@ -50,11 +50,13 @@ Airflow will already be running at:
 
 To stop it, run (from inside `airflowv2-kubernetes`):
 
-    make clean
+    make uninstall-airflow
 
-To bring it up again later, run:
+To bring airflow up again later, run:
 
-    make install
+    make install-airflow
+  
+Run `make help` for more details
 
 ### Windows: Not implemented yet
 
@@ -103,7 +105,13 @@ To bring it up again later, run:
   kubectl apply -f configMap.yaml
   ```
 
-- **Step 6: Deploy airflow with default value.yaml for each airflow service running on kubernetes:**. 
+  - **Step 6: Apply Persistence Volume(pv) and Persistence Volume Claim(pvc)**. It help to mount volume from container to host machine
+  ```bash
+  kubectl apply -f ./chart/dags-volume.yaml -n airflow
+	kubectl apply -f ./chart/logs-volume.yaml -n airflow
+  ```
+
+- **Step 7: Deploy airflow with default value.yaml for each airflow service running on kubernetes:**. 
 
   ```bash
   # add the official repository of the Apache Airflow Helm chart
@@ -138,7 +146,7 @@ To bring it up again later, run:
   For more detail on overriding Helm chart values, please refer to this [link](https://all.docs.genesys.com/PrivateEdition/Current/PEGuide/HelmOverrides)
 
   
-- **Step 7: Config external log on s3 (optional)**. Basically, the task execution will persit log to the pod where it's running. And the log will be gone if the pod get terminated once it finishes. Therefore, we need to send the log to an external storage such as : S3, Big Query... In this setup, we will [write log to Amazon S3](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/logging/s3-task-handler.html) ([general architecture digram](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/logging-architecture.html)). 
+- **Step 8: Config external log on s3 (optional)**. Basically, the task execution will persit log to the pod where it's running. And the log will be gone if the pod get terminated once it finishes. Therefore, we need to send the log to an external storage such as : S3, Big Query... In this setup, we will [write log to Amazon S3](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/logging/s3-task-handler.html) ([general architecture digram](https://airflow.apache.org/docs/apache-airflow/stable/logging-monitoring/logging-architecture.html)). 
   
   Only config this setting if you have an object storage on your local (eg. minio, localstack, Azure Object Storage...)
   ```
@@ -158,6 +166,8 @@ kubectl describe pod podname
 
 # Prune all docker volumes in case you running out of space when copy docker iamge to kubernetes
 docker system prune --all --force --volumes
+
+docker build --no-cache --build-arg AIRFLOW_VERSION=2.4.1 -t local/airflowv2:1.0.4 ./docker/. 
 
 ```
 

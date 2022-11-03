@@ -1,4 +1,5 @@
-FROM apache/airflow:2.4.1
+ARG AIRFLOW_VERSION
+FROM apache/airflow:$AIRFLOW_VERSION
 COPY requirements.txt .
 USER root
 
