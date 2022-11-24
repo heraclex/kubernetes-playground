@@ -1,6 +1,7 @@
 #SHELL := /usr/bin/env bash
 
 # Check OS
+# TODO: Need to work on it for Windows
 ifeq ($(OS),Windows_NT)
 CHECKING := $(error $(OS) is not supported.)
 endif
