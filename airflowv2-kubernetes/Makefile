@@ -72,9 +72,9 @@ run-config-afcluster:
 	kubectl apply -f ./chart/dags-volume.yaml -n airflow
 	kubectl apply -f ./chart/logs-volume.yaml -n airflow
 
+# helm repo add apache-airflow https://airflow.apache.org
 start-afcluster:
 	@echo "> Starting 'airflow' cluster..."
-	helm repo add apache-airflow https://airflow.apache.org
 	helm upgrade --install airflow apache-airflow/airflow --namespace airflow -f ./chart/override-values.yaml --debug
 	@echo "> Mounting 'svc/airflow-webserver'" to port 8080
 	kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
