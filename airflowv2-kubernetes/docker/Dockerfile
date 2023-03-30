@@ -10,13 +10,13 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Adding the package path to local
-ENV PATH $PATH:/opt/gcloud/google-cloud-sdk/bin 
-RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz \
-    && mkdir -p /opt/gcloud \
-    && tar -C /opt/gcloud -xvf /tmp/google-cloud-sdk.tar.gz \
-    && /opt/gcloud/google-cloud-sdk/install.sh \
-    && gcloud --version \
-    && rm -f /tmp/google-cloud-sdk.tar.gz
+# ENV PATH $PATH:/opt/gcloud/google-cloud-sdk/bin 
+# RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz \
+#     && mkdir -p /opt/gcloud \
+#     && tar -C /opt/gcloud -xvf /tmp/google-cloud-sdk.tar.gz \
+#     && /opt/gcloud/google-cloud-sdk/install.sh \
+#     && gcloud --version \
+#     && rm -f /tmp/google-cloud-sdk.tar.gz
 
 
 USER airflow
