@@ -43,7 +43,7 @@ delete-airflow-docker-image:
 
 check: 
 	@echo "> Check is not implemented yet"
-install-all: brew-install-prerequisite docker-build-airflow-image create-config-files create-kubernetes loading-airflow-image run-config-afcluster start-afcluster
+install-all: docker-build-airflow-image create-config-files create-kubernetes loading-airflow-image run-config-afcluster start-afcluster
 install-kubernetes-airflow: create-config-files create-kubernetes loading-airflow-image run-config-afcluster start-afcluster
 install-airflow: create-config-files run-config-afcluster start-afcluster
 help:
@@ -75,7 +75,7 @@ run-config-afcluster:
 # helm repo add apache-airflow https://airflow.apache.org
 start-afcluster:
 	@echo "> Starting 'airflow' cluster..."
-	helm upgrade --install airflow apache-airflow/airflow --namespace airflow -f ./chart/override-values.yaml --debug
+	helm upgrade --install airflow apache-airflow/airflow --namespace airflow -f ./chart/override-values-test.yaml --debug
 	@echo "> Mounting 'svc/airflow-webserver'" to port 8080
 	kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
 
