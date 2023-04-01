@@ -53,7 +53,12 @@ config_override_value() {
   # yq w ./chart/override-values.yaml  .dags.gitSync.knownHosts "\n ${git_sync_known_host_public_key}" 
 
   # yq eval .dags.gitSync.knownHosts = $git_sync_known_host_public_key  ./chart/override-values.yaml 
-  sed -i.bak -e "/^\([[:space:]]*knownHosts: \).*/s//\1|\n      s|${git_sync_known_host_public_key}|g" ./chart/override-values.yaml 
+
+  # echo "$git_sync_known_host_public_key" | tr "/" /
+  # '//\/'
+  echo "$git_sync_known_host_public_key" | tr '/' "xxxxxx"
+  # sed -i.bak -e "/^\([[:space:]]*knownHosts: \).*/s//\1|\n      s/\${aaa}/" ./chart/override-values.yaml 
+
 
 }
 
