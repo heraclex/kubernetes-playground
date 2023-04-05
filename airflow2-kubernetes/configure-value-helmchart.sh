@@ -10,7 +10,7 @@ DEFAULT_AIRFLOW_REPOSITORY='local\/airflowv2'
 DEFAULT_AIRFLOW_TAG="1.0.0"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
-AIRFLOW_VERSION="2.3.0"
+AIRFLOW_VERSION="2.5.3"
 
 config_override_value() {
   ### get information ready to replace template
