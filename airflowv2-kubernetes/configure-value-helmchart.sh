@@ -47,18 +47,11 @@ config_override_value() {
   echo "...added AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT to secret"
   sed -i.bak -E "/^extraSecrets:/s//extraSecrets:\n  gcp-airflow-connections:\n    stringData: |\n      AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT: '$airflow_con'/" ./chart/override-values.yaml 
   echo "...added AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT to extraSecrets \n"
-
-  # yq eval '.dags.gitSync.knownHosts = load_str("github_public_key.txt")' -i ./chart/override-values.yaml 
-
-  # yq w ./chart/override-values.yaml  .dags.gitSync.knownHosts "\n ${git_sync_known_host_public_key}" 
-
-  # yq eval .dags.gitSync.knownHosts = $git_sync_known_host_public_key  ./chart/override-values.yaml 
-
-  # echo "$git_sync_known_host_public_key" | tr "/" /
-  # '//\/'
-  echo "$git_sync_known_host_public_key" | tr '/' "xxxxxx"
-  # sed -i.bak -e "/^\([[:space:]]*knownHosts: \).*/s//\1|\n      s/\${aaa}/" ./chart/override-values.yaml 
-
+  
+  # treating encoded content and posix compliant
+  git_sync_known_host_public_key="$( echo "${git_sync_known_host_public_key}" | sed 's/[\\&*./+!]/\\&/g' )"
+  sed -i.bak -e "/^\([[:space:]]*knownHosts: \).*/s//\1|\n      $git_sync_known_host_public_key/" ./chart/override-values.yaml
+  echo "...added GIT_SYNC_KNOWN_HOST_PUBLIC_KEY($git_sync_known_host_public_key) to knownHosts \n"
 
 }
 
