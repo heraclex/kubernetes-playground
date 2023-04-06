@@ -19,5 +19,5 @@ create-service-account-and-role-biding:
 	@echo "> show serviceaccounts:"
 	kubectl get serviceaccounts --namespace=$(namespace)
 docker-build-spark-image:
-	cd $(SPARK_HOME) && bin/docker-image-tool.sh -r local -t v3.2.1-j11 -p kubernetes/dockerfiles/spark/bindings/python/Dockerfile -n build
+	cd $(SPARK_HOME) && bin/docker-image-tool.sh -r local -t 3.2.1 -p kubernetes/dockerfiles/spark/bindings/python/Dockerfile -n build
 	
