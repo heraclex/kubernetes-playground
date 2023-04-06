@@ -76,6 +76,8 @@ upload-spark-image:
 
 build-upload-spark-airflow-images: docker-build-spark-image docker-build-airflow-image upload-spark-image upload-airflow-image
 
+# A ServiceAccount provides an identity for processes that run in a Pod.
+# https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/
 create-spark-service-account-and-role-biding: 
 	@echo "> Create service-account spark-driver ..."
 	kubectl create serviceaccount spark-driver --namespace=$(SPARK_NAMESPACE)
@@ -89,6 +91,10 @@ create-spark-service-account-and-role-biding:
 	
 	@echo "> show serviceaccounts:"
 	kubectl get serviceaccounts --namespace=$(SPARK_NAMESPACE)
+### https://stackoverflow.com/questions/55498702/how-to-fix-forbiddenconfigured-service-account-doesnt-have-access-with-spark
+### https://github.com/GoogleCloudPlatform/continuous-deployment-on-kubernetes/issues/113
+	@echo "> Create clusterrolebinding and namespace 'role-binding' to grant the account administrative privileges..."
+	kubectl create clusterrolebinding spark-clusterrolebinding --clusterrole=edit --serviceaccount=$(SPARK_NAMESPACE):spark-driver --namespace=$(SPARK_NAMESPACE)
 
 brew-install-prerequisite:
 	brew install kubectl

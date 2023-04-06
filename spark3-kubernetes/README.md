@@ -17,7 +17,7 @@ bin/docker-image-tool.sh -r local -t v3.2.1-j11 -p kubernetes/dockerfiles/spark/
 # Create a jump pod using the Spark driver container and service account
 kubectl run spark-test-pod -it --rm=true \
   --namespace=spark \
-  --image=local/spark2:1.0.0 \
+  --image=local/spark:v3.3.2 \
   --command -- /bin/bash
 
 kubectl delete pod spark-test-pod --namespace=spark
@@ -68,17 +68,28 @@ $SPARK_HOME/bin/spark-submit \
   --master k8s://https://127.0.0.1:58441 \
   --deploy-mode cluster \
   --name spark-pi \
-  --class org.apache.spark.examples.SparkPi \
-  --conf spark.executor.instances=3 \
-  --conf spark.kubernetes.driver.pod.name=spark-test1-pi  \
-  --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark-executor  \
+  --conf spark.executor.instances=4 \
+  --conf spark.driver.memory=1g \
+  --conf spark.executor.memory=1g \
+  --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark-driver  \
   --conf spark.kubernetes.container.image=local/spark:v3.3.2 \
   --conf spark.kubernetes.namespace=spark \
-  --conf spark.kubernetes.authenticate.submission.oauthTokenFile=local:///var/run/secrets/kubernetes.io/serviceaccount/token 
-  --jars local:///opt/spark/examples/jars/spark-examples_2.12-3.3.2.jar
+  --class org.apache.spark.examples.SparkPi \
+  local:///opt/spark/examples/jars/spark-examples_2.12-3.3.2.jar
+
+
+
+  kubectl create clusterrolebinding spark-clusterrolebinding --clusterrole=edit --serviceaccount=spark:spark-driver --namespace=spark  
 
 # get log from pod
 kubectl -n {namespace} logs {pod-id}
 ```
+
+
+
+
+
+REF
+https://www.oak-tree.tech/blog/spark-kubernetes-primer
 
 
