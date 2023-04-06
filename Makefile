@@ -1,17 +1,94 @@
+#SHELL := /usr/bin/env bash
 
-initializing-kubernetes:
+# Check OS
+# TODO: Need to work on it for Windows
+ifeq ($(OS),Windows_NT)
+CHECKING := $(error $(OS) is not supported.)
+endif
+
+# Check required executables: bash curl sed gcloud docker docker-compose
+REQUIRED_TOOLS = bash curl sed docker docker-compose kubectl k9s helm
+CHECKING := $(foreach exec,$(REQUIRED_TOOLS), $(if $(shell which $(exec)),0,$(error "$(exec) not found")))
+
+# Check if user has logged in
+# LOCAL_GCLOUD_USER := $(shell gcloud info --format=json | grep account | cut -d ':' -f 2 | tr -d '," \n')
+# CHECKING :=
+#     ifeq ($(LOCAL_GCLOUD_USER),null)
+#         $(error gcloud user has not been set. Please run `gcloud auth login`.)
+#     endif
+
+
+LOCAL_DOCKER_IMG_REPO=local
+# Airflow macros
+AIRFLOW_IMAGE_NAME=airflow
+AIRFLOW_IMAGE_TAG=1.0.0
+AIRFLOW_VERSION=2.5.2
+AIRFLOW_IMAGE_FULLNAME=${LOCAL_DOCKER_IMG_REPO}/${AIRFLOW_IMAGE_NAME}:v${AIRFLOW_VERSION}
+AIRFLOW_NAMESPACE=airflow
+
+# Spark macros
+SPARK_IMAGE_NAME=spark
+SPARK_IMAGE_TAG=1.0.0
+SPARK_VERSION=3.3.2
+SPARK_IMAGE_FULLNAME=${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}:v${SPARK_VERSION}
+SPARK_NAMESPACE=spark
+
+CLUSTER_NAME=local-spark-airflow-cluster
+
+# All Targets
+.DEFAULT_GOAL := help
+.PHONY: uninstall-all install-all help
+
+initializing-spark-airflow-cluster:
 	@echo "> Configuring main-kind-cluster..."
-	bash ./configure-main-kind-cluster.sh $(AIRFLOW_VERSION)
-	@echo "> Initializing kubernetes (on kind cluster)..."
-	kind create cluster --name local-spark-airflow-cluster --config main-kind-cluster.yaml
+	bash ./configure-main-kind-cluster.sh
+	
+	@echo "> Initializing kubernetes ${CLUSTER_NAME} (on kind)..."
+	kind create cluster --name ${CLUSTER_NAME} --config main-kind-cluster.yaml
+	
+	@echo "> Create namespace '${AIRFLOW_NAMESPACE}'..."
+	kubectl create namespace ${AIRFLOW_NAMESPACE}
+
+	@echo "> Create namespace '${SPARK_NAMESPACE}'..."
+	kubectl create namespace ${SPARK_NAMESPACE}
+
+uninstall-spark-airflow-cluster: 
+	@echo "> Delete ${CLUSTER_NAME}..."
+	kind delete cluster --name ${CLUSTER_NAME}
 
 docker-build-airflow-image:
-	@echo "> Build docker image 'airflow' version:$(AIRFLOW_VERSION) with tag:${AIRFLOW_IMAGE_TAG}"
-	docker build --no-cache --build-arg AIRFLOW_VERSION=$(AIRFLOW_VERSION) -t ${AIRFLOW_IMAGE_FULLNAME} ./airflow2-kubernetes/docker/.
+	@echo "> Build docker image 'airflow' version:$(AIRFLOW_VERSION)"
+	docker build --no-cache --build-arg AIRFLOW_VERSION=$(AIRFLOW_VERSION) -t $(AIRFLOW_IMAGE_FULLNAME) ./airflow2-kubernetes/docker/.
+upload-airflow-image:
+	@echo "> Upload airflow ${AIRFLOW_IMAGE_FULLNAME} to ${CLUSTER_NAME}..."
+	kind load docker-image ${AIRFLOW_IMAGE_FULLNAME} --name ${CLUSTER_NAME}
 
-docker-build-airflow-image:
-	@echo "> Build docker image 'spark' version:$(SPARK_VERSION) with tag:${SPARK_IMAGE_TAG}"
-	docker build --no-cache --build-arg AIRFLOW_VERSION=$(SPARK_VERSION) -t ${SPARK_IMAGE_FULLNAME} ./spark3-kubernetes-docker/.
+
+### docker build --no-cache --build-arg SPARK_VERSION=$(SPARK_VERSION) -t ${SPARK_IMAGE_FULLNAME} ./spark3-kubernetes/docker/.
+docker-build-spark-image:
+	@echo "> Build docker image 'spark' version:$(SPARK_VERSION) with tag:${SPARK_VERSION}"
+	cd $(SPARK_HOME) && bin/docker-image-tool.sh -r $(LOCAL_DOCKER_IMG_REPO) -t v$(SPARK_VERSION) -p kubernetes/dockerfiles/spark/bindings/python/Dockerfile -n build
+upload-spark-image:
+	@echo "> Upload spark: ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}:v${SPARK_VERSION} to ${CLUSTER_NAME} ..."
+	kind load docker-image ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}:v${SPARK_VERSION} --name ${CLUSTER_NAME}
+	@echo "> Upload spark-py: ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}-py:v${SPARK_VERSION} image to ${CLUSTER_NAME} ..."
+	kind load docker-image ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}-py:v${SPARK_VERSION} --name ${CLUSTER_NAME}
+
+build-upload-spark-airflow-images: docker-build-spark-image docker-build-airflow-image upload-spark-image upload-airflow-image
+
+create-spark-service-account-and-role-biding: 
+	@echo "> Create service-account spark-driver ..."
+	kubectl create serviceaccount spark-driver --namespace=$(SPARK_NAMESPACE)
+	@echo "> Create a cluster and namespace 'role-binding' to grant the account administrative privileges..."
+	kubectl create rolebinding spark-driver-rb --clusterrole=cluster-admin --serviceaccount=$(SPARK_NAMESPACE):spark-driver
+
+	@echo "> Create service-account  spark-executor..."
+	kubectl create serviceaccount spark-executor --namespace=$(SPARK_NAMESPACE)
+	@echo "> Create a cluster and namespace 'role-binding' to grant the account administrative privileges..."
+	kubectl create rolebinding spark-executor-rb --clusterrole=cluster-admin --serviceaccount=$(SPARK_NAMESPACE):spark-executor
+	
+	@echo "> show serviceaccounts:"
+	kubectl get serviceaccounts --namespace=$(SPARK_NAMESPACE)
 
 brew-install-prerequisite:
 	brew install kubectl

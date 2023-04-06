@@ -16,9 +16,11 @@ bin/docker-image-tool.sh -r local -t v3.2.1-j11 -p kubernetes/dockerfiles/spark/
 
 # Create a jump pod using the Spark driver container and service account
 kubectl run spark-test-pod -it --rm=true \
-  --image=local/spark:v3.2.1-j11 \
-  --serviceaccount=spark-driver \
+  --namespace=spark \
+  --image=local/spark2:1.0.0 \
   --command -- /bin/bash
+
+kubectl delete pod spark-test-pod --namespace=spark
 ```
 
 # create driver service account
@@ -59,20 +61,21 @@ kind load docker-image local/spark-py:v3.2.1-j11 --name spark-cluster
 # get cluster infor
 kubectl cluster-info
 
+#   --conf spark.kubernetes.authenticate.subdmission.caCertFile=local:///var/run/secrets/kubernetes.io/serviceaccount/ca.crt  \
+#   --conf spark.kubernetes.authenticate.submission.oauthTokenFile=local:///var/run/secrets/kubernetes.io/serviceaccount/token  \
 # submit spark
 $SPARK_HOME/bin/spark-submit \
-  --master k8s://https://127.0.0.1:49689 \
+  --master k8s://https://127.0.0.1:58441 \
   --deploy-mode cluster \
   --name spark-pi \
   --class org.apache.spark.examples.SparkPi \
   --conf spark.executor.instances=3 \
   --conf spark.kubernetes.driver.pod.name=spark-test1-pi  \
-#   --conf spark.kubernetes.authenticate.subdmission.caCertFile=local:///var/run/secrets/kubernetes.io/serviceaccount/ca.crt  \
-#   --conf spark.kubernetes.authenticate.submission.oauthTokenFile=local:///var/run/secrets/kubernetes.io/serviceaccount/token  \
   --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark-executor  \
-  --conf spark.kubernetes.container.image=local/spark:v3.2.1-j11 \
+  --conf spark.kubernetes.container.image=local/spark:v3.3.2 \
   --conf spark.kubernetes.namespace=spark \
-  local:///opt/spark/examples/jars/spark-examples_2.12-3.2.1.jar
+  --conf spark.kubernetes.authenticate.submission.oauthTokenFile=local:///var/run/secrets/kubernetes.io/serviceaccount/token 
+  --jars local:///opt/spark/examples/jars/spark-examples_2.12-3.3.2.jar
 
 # get log from pod
 kubectl -n {namespace} logs {pod-id}

@@ -4,10 +4,10 @@ set -o errexit
 set -o pipefail
 
 # Default airflow repository -- overrides all the specific images below
-DEFAULT_AIRFLOW_REPOSITORY='local\/airflowv2'
+DEFAULT_AIRFLOW_REPOSITORY='local\/airflow'
 
 # Default airflow tag to deploy
-DEFAULT_AIRFLOW_TAG="1.0.0"
+DEFAULT_AIRFLOW_TAG="v2.5.2"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
 AIRFLOW_VERSION="2.5.3"

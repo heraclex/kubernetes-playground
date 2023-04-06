@@ -1,4 +1,4 @@
-kind-cluster.yaml
+main-kind-cluster.yaml
 override-values.yaml
 airflow.sh
 airflowv2-kubernetes/data
