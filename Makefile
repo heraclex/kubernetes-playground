@@ -21,16 +21,14 @@ CHECKING := $(foreach exec,$(REQUIRED_TOOLS), $(if $(shell which $(exec)),0,$(er
 LOCAL_DOCKER_IMG_REPO=local
 # Airflow macros
 AIRFLOW_IMAGE_NAME=airflow
-AIRFLOW_IMAGE_TAG=1.0.0
 AIRFLOW_VERSION=2.5.2
-AIRFLOW_IMAGE_FULLNAME=${LOCAL_DOCKER_IMG_REPO}/${AIRFLOW_IMAGE_NAME}:v${AIRFLOW_VERSION}
+AIRFLOW_IMAGE_FULLNAME=${LOCAL_DOCKER_IMG_REPO}/${AIRFLOW_IMAGE_NAME}:${AIRFLOW_VERSION}
 AIRFLOW_NAMESPACE=airflow
 
 # Spark macros
 SPARK_IMAGE_NAME=spark
-SPARK_IMAGE_TAG=1.0.0
 SPARK_VERSION=3.3.2
-SPARK_IMAGE_FULLNAME=${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}:v${SPARK_VERSION}
+SPARK_IMAGE_FULLNAME=${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}:${SPARK_VERSION}
 SPARK_NAMESPACE=spark
 
 CLUSTER_NAME=local-spark-airflow-cluster
@@ -69,10 +67,10 @@ docker-build-spark-image:
 	@echo "> Build docker image 'spark' version:$(SPARK_VERSION) with tag:${SPARK_VERSION}"
 	cd $(SPARK_HOME) && bin/docker-image-tool.sh -r $(LOCAL_DOCKER_IMG_REPO) -t v$(SPARK_VERSION) -p kubernetes/dockerfiles/spark/bindings/python/Dockerfile -n build
 upload-spark-image:
-	@echo "> Upload spark: ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}:v${SPARK_VERSION} to ${CLUSTER_NAME} ..."
-	kind load docker-image ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}:v${SPARK_VERSION} --name ${CLUSTER_NAME}
-	@echo "> Upload spark-py: ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}-py:v${SPARK_VERSION} image to ${CLUSTER_NAME} ..."
-	kind load docker-image ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}-py:v${SPARK_VERSION} --name ${CLUSTER_NAME}
+	@echo "> Upload spark: ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}:${SPARK_VERSION} to ${CLUSTER_NAME} ..."
+	kind load docker-image ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}:${SPARK_VERSION} --name ${CLUSTER_NAME}
+	@echo "> Upload spark-py: ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}-py:${SPARK_VERSION} image to ${CLUSTER_NAME} ..."
+	kind load docker-image ${LOCAL_DOCKER_IMG_REPO}/${SPARK_IMAGE_NAME}-py:${SPARK_VERSION} --name ${CLUSTER_NAME}
 
 build-upload-spark-airflow-images: docker-build-spark-image docker-build-airflow-image upload-spark-image upload-airflow-image
 

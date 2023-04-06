@@ -72,7 +72,7 @@ $SPARK_HOME/bin/spark-submit \
   --conf spark.driver.memory=1g \
   --conf spark.executor.memory=1g \
   --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark-driver  \
-  --conf spark.kubernetes.container.image=local/spark:v3.3.2 \
+  --conf spark.kubernetes.container.image=toanlee/spark:3.3.2 \
   --conf spark.kubernetes.namespace=spark \
   --class org.apache.spark.examples.SparkPi \
   local:///opt/spark/examples/jars/spark-examples_2.12-3.3.2.jar

@@ -7,10 +7,10 @@ set -o pipefail
 DEFAULT_AIRFLOW_REPOSITORY='local\/airflow'
 
 # Default airflow tag to deploy
-DEFAULT_AIRFLOW_TAG="v2.5.2"
+DEFAULT_AIRFLOW_TAG="2.5.2"
 
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
-AIRFLOW_VERSION="2.5.3"
+AIRFLOW_VERSION="2.5.2"
 
 config_override_value() {
   ### get information ready to replace template
