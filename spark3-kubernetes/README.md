@@ -65,7 +65,7 @@ kubectl cluster-info
 #   --conf spark.kubernetes.authenticate.submission.oauthTokenFile=local:///var/run/secrets/kubernetes.io/serviceaccount/token  \
 # submit spark
 $SPARK_HOME/bin/spark-submit \
-  --master k8s://https://127.0.0.1:58441 \
+  --master k8s://https://127.0.0.1:64951 \
   --deploy-mode cluster \
   --name spark-pi \
   --conf spark.executor.instances=4 \
@@ -76,6 +76,46 @@ $SPARK_HOME/bin/spark-submit \
   --conf spark.kubernetes.namespace=spark \
   --class org.apache.spark.examples.SparkPi \
   local:///opt/spark/examples/jars/spark-examples_2.12-3.3.2.jar
+
+
+  $SPARK_HOME/bin/spark-submit \
+  --master k8s://https://127.0.0.1:64951 \
+  --deploy-mode cluster \
+  --name spark-pi \
+  --conf spark.kubernetes.driverEnv.SPARK_MASTER_URL=spark://https://127.0.0.1:8080
+  --conf spark.executor.instances=4 \
+  --conf spark.driver.memory=1g \
+  --conf spark.executor.memory=1g \
+  --conf spark.kubernetes.container.image=bitnami/spark:3 \
+  --conf spark.kubernetes.namespace=spark \
+  --class org.apache.spark.examples.SparkPi \
+  $SPARK_HOME/examples/jars/spark-examples_2.12-3.3.2.jar
+
+
+  $SPARK_HOME/bin/spark-submit \
+    --class org.apache.spark.examples.SparkPi \
+    --conf spark.kubernetes.container.image=bitnami/spark:3 \
+    --master k8s://https://127.0.0.1:64951 \
+    --conf spark.kubernetes.driverEnv.SPARK_MASTER_URL=spark://https://127.0.0.1:8080 \
+    --deploy-mode cluster \
+    --conf spark.kubernetes.file.upload.path='local:///opt/spark/examples/jars/spark-examples_2.12-3.3.2.jar' 1000
+
+  $SPARK_HOME/bin/spark-submit \
+    --master k8s://https://127.0.0.1:64951 \
+    --deploy-mode cluster \
+    --name spark-pi \
+    --conf spark.kubernetes.container.image=bitnami/spark:3 \
+    --conf spark.kubernetes.driverEnv.SPARK_MASTER_URL=spark://spark-master-0.spark-headless.spark.svc.cluster.local:7077 \
+    --conf spark.executor.instances=4 \
+    --conf spark.driver.memory=1g \
+    --conf spark.executor.memory=1g \
+    --conf spark.kubernetes.container.image=bitnami/spark:3 \
+    --conf spark.kubernetes.namespace=spark \
+    --conf spark.kubernetes.file.upload.path='/tmp' \
+    --class org.apache.spark.examples.SparkPi \
+    ~/services/spark-3.3.2-bin-hadoop3/examples/jars/spark-examples_2.12-3.3.2.jar 1000
+    
+    $SPARK_HOME/examples/jars/spark-examples_2.12-3.3.2.jar 1000
 
 
 
