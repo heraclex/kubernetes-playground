@@ -1,0 +1,5 @@
+ARG SPARK_VERSION
+FROM toanlee/spark:$SPARK_VERSION
+
+USER root
+USER spark
