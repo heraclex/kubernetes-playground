@@ -19,8 +19,8 @@ CHECKING := $(foreach exec,$(REQUIRED_TOOLS), $(if $(shell which $(exec)),0,$(er
 
 # Airflow macros
 AIRFLOW_IMAGE_REPO=local
-AIRFLOW_IMAGE_NAME=airflowv2
-AIRFLOW_IMAGE_TAG=2.6.2
+AIRFLOW_IMAGE_NAME=airflow
+AIRFLOW_IMAGE_TAG=v2.6.2
 AIRFLOW_IMAGE_FULLNAME=${AIRFLOW_IMAGE_REPO}/${AIRFLOW_IMAGE_NAME}:${AIRFLOW_IMAGE_TAG}
 AIRFLOW_VERSION=2.6.2
 
@@ -36,7 +36,7 @@ delete-airflow-namespace:
 	kubectl delete namespace airflow
 delete-kubernetes-cluster:
 	@echo "> Delete kubernetes(kind) cluster..."
-	kind delete cluster --name airflow-cluster
+	kind delete cluster --name airflow
 delete-airflow-docker-image:
 	@echo "> Delete docker image ${AIRFLOW_IMAGE_FULLNAME}"
 	docker image rm -f ${AIRFLOW_IMAGE_FULLNAME}
@@ -58,18 +58,18 @@ help:
 
 create-kubernetes:
 	@echo "> Initializing kubernetes (kind)..."
-	kind create cluster --name airflow-cluster --config kind-cluster.yaml
+	kind create cluster --name airflow --config kind-cluster.yaml
 
 loading-airflow-image:
 	@echo "> Loading airflow image to kubernetes(kind) ..."
-	kind load docker-image ${AIRFLOW_IMAGE_FULLNAME} --name airflow-cluster
+	kind load docker-image ${AIRFLOW_IMAGE_FULLNAME} --name airflow
 
 run-config-afcluster:
 	@echo "> Configuring 'airflow' cluster..."
 	kubectl create namespace airflow
 	kubectl apply -f ./chart/secret.yaml -n airflow
 	kubectl apply -f ./chart/configMap.yaml -n airflow
-	kubectl apply -f ./chart/dags-volume.yaml -n airflow
+# kubectl apply -f ./chart/dags-volume.yaml -n airflow
 	kubectl apply -f ./chart/logs-volume.yaml -n airflow
 
 # helm repo add apache-airflow https://airflow.apache.org
