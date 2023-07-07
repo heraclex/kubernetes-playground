@@ -12,8 +12,8 @@ nodes:
   extraMounts:
     - hostPath: ./data/logs
       containerPath: /tmp/logs
-    # - hostPath: ./data/dags
-    #   containerPath: /tmp/dags
+    - hostPath: ./data/dags
+      containerPath: /tmp/dags
 - role: worker
   kubeadmConfigPatches:
   - |
@@ -24,8 +24,8 @@ nodes:
   extraMounts:
     - hostPath: ./data/logs
       containerPath: /tmp/logs
-    # - hostPath: ./data/dags
-    #   containerPath: /tmp/dags
+    - hostPath: ./data/dags
+      containerPath: /tmp/dags
 - role: worker
   kubeadmConfigPatches:
   - |
@@ -36,5 +36,5 @@ nodes:
   extraMounts:
     - hostPath: ./data/logs
       containerPath: /tmp/logs
-    # - hostPath: ./data/dags
-    #   containerPath: /tmp/dags
+    - hostPath: ./data/dags
+      containerPath: /tmp/dags
