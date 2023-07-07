@@ -105,10 +105,10 @@ Run `make help` for more details
   kubectl apply -f configMap.yaml
   ```
 
-  - **Step 6: Apply Persistence Volume(pv) and Persistence Volume Claim(pvc)**. It help to mount volume from container to host machine
-  ```bash
-  kubectl apply -f ./chart/dags-volume.yaml -n airflow
-	kubectl apply -f ./chart/logs-volume.yaml -n airflow
+- **Step 6: Apply Persistence Volume(pv) and Persistence Volume Claim(pvc)**. It help to mount volume from container to host machine
+```bash
+kubectl apply -f ./chart/dags-volume.yaml -n airflow
+kubectl apply -f ./chart/logs-volume.yaml -n airflow
   ```
 
 - **Step 7: Deploy airflow with default value.yaml for each airflow service running on kubernetes:**. 
